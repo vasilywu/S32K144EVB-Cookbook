@@ -1,7 +1,7 @@
 # S32K144EVB-Cookbook
 The practices of the S32K14x Series Cookbook Application Note.
 
-They were implemented using Keil uVision5 (MDK-Community Edition) and tested on the S32K144 evaluation board (S32K144EVB-Q100). 
+They will be implemented using Keil uVision5 (MDK-Community Edition) and tested on the S32K144 evaluation board (S32K144EVB-Q100). 
 
 ## S32K144EVB-Q100
 
@@ -14,3 +14,25 @@ Based on the 32-bit Arm® Cortex®-M4F S32K14 MCU, the S32K144EVB offers a stand
 ## MDK Community Edition
 
 MDK-Community is the full-featured, non-commercial software development suite for Cortex®-M-based microcontrollers.![Compare MDK Editions](README.assets/Compare%20MDK%20Editions.PNG)
+
+## P&E OpenSDA
+OpenSDA is an open-standard serial and debug adapter. It bridges serial and debug communications between a USB host and an
+embedded target processor. 
+
+NXP OpenSDA has a P&E and a CMSIS-DAP mode depending on the firmware loaded into the OpenSDA processor U8. We do not need an external debugger such as a ULINK2. 
+
+1. Click on Settings: The P&E Connection Manager window opens.
+
+   ![P&E](README.assets/P&E.png)
+
+2. In the Interface box, select OpenSDA Embedded Tower Debug - USB Port: 
+
+   ![OpenSDA Embedded Tower Debug](README.assets/OpenSDA%20Embedded%20Tower%20Debug.png)
+
+3. Click the Select New Device box, and select your exact processor: 
+
+   ![Select New Device box](README.assets/Select%20New%20Device%20box.png)
+
+4. Click on the Refresh List and get a valid Port:
+
+   ![Refresh List](README.assets/Refresh%20List.png)
