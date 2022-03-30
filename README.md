@@ -69,8 +69,9 @@ NXP OpenSDA has a P&E and a CMSIS-DAP mode depending on the firmware loaded into
 
 ## Lists
 
-| Number | Project           | Description                                                  |
-| ------ | ----------------- | ------------------------------------------------------------ |
-| 01     | Hello World       | Simplest project:<br/>Configure GPIO<br/>Output to LED follows switch input |
-| 02     | Hello World Clock | Perform common initialization for clocks and LPIT:<br/>Initialize System Oscillator (SOSC)<br/>Initialize LPIT channel (1 second timeout)<br/>Toggle output to LED every LPIT timeout |
+| Number | Project                      | Description                                                  |
+| ------ | ---------------------------- | ------------------------------------------------------------ |
+| 01     | Hello World                  | Simplest project:<br/>Configure GPIO<br/>Output to LED follows switch input |
+| 02     | Hello World Clock            | Perform common initialization for clocks and LPIT:<br/>Initialize System Oscillator (SOSC)<br/>Initialize LPIT channel (1 second timeout)<br/>Toggle output to LED every LPIT timeout |
+| 03     | Hello World Clock Interrupts | The Hello World + Clock example is modified to service the PIT channel timeout with an interrupt service route:<br/>Initialize System Oscillator (SOSC)<br/>Initialize an LPIT channel for 1 second timeout and enable its interrupt<br/>Wait forever<br/>At LPIT timeout interrupt, toggle output to LED |
 
