@@ -13,7 +13,9 @@ Based on the 32-bit Arm® Cortex®-M4F S32K14 MCU, the S32K144EVB offers a stand
 
 ## MDK Community Edition
 
-MDK-Community is the full-featured, non-commercial software development suite for Cortex®-M-based microcontrollers.![Compare MDK Editions](README.assets/Compare%20MDK%20Editions.PNG)
+MDK-Community is the full-featured, non-commercial software development suite for Cortex®-M-based microcontrollers.
+
+![Compare MDK Editions](README.assets/Compare%20MDK%20Editions.PNG)
 
 ## P&E OpenSDA
 OpenSDA is an open-standard serial and debug adapter. It bridges serial and debug communications between a USB host and an
@@ -36,3 +38,38 @@ NXP OpenSDA has a P&E and a CMSIS-DAP mode depending on the firmware loaded into
 4. Click on the Refresh List and get a valid Port:
 
    ![Refresh List](README.assets/Refresh%20List.png)
+
+## Create New Keil Project
+
+1. Project->New uVision Project
+
+2. Select Device: S32K144HAxxxLLx
+
+   ![Select Device](README.assets/Select%20Device.png)
+
+3. Manage Project Items
+
+   ![Manage Project Items](README.assets/Manage%20Project%20Items.png)
+
+4. Manage RTE: Ensure the CORE and Startup are checked
+
+   ![Manage RTE](README.assets/Manage%20RTE.png)
+
+5. Add Include Paths
+
+   ![Add Include Path](README.assets/Add%20Include%20Path.png)
+
+6. Change the Optimization Level to "-O0", it's important for Single-Stepping
+
+   ![Change Optimization](README.assets/Change%20Optimization.png)
+
+7. Uncheck "Use Memory Layout from Target Dialog"  and Select "S32K144_64_flash.sct" as Scatter File
+
+   ![Scatter](README.assets/Scatter.png)
+
+## Lists
+
+| Number | Project     | Description                                                  |
+| ------ | ----------- | ------------------------------------------------------------ |
+| 01     | Hello World | Simplest project:<br/>Configure GPIO<br/>Output to LED follows switch input |
+
