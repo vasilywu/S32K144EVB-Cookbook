@@ -18,6 +18,8 @@
 /*==================================================================================================
 *                                       LOCAL MACROS
 ==================================================================================================*/
+/* Port PTD0, bit 0: EVB output to blue LED */
+#define PTD0		(0U)
 
 /*==================================================================================================
 *                                      LOCAL CONSTANTS
@@ -110,8 +112,8 @@ void NVIC_init_IRQs(void)
 void PORT_init(void)
 {
 	PCC->PCCn[PCC_PORTD_INDEX] = PCC_PCCn_CGC_MASK; 	/* Enable clock for PORT D */
-	PTD->PDDR |= 1U << 0U;            				/* Port D0:  Data Direction= output */
-	PORTD->PCR[0] |=  PORT_PCR_MUX(1U);  			/* Port D0:  MUX = ALT1, GPIO (to blue LED on EVB) */
+	PTD->PDDR |= 1U << 0U;            					/* Port D0:  Data Direction= output */
+	PORTD->PCR[PTD0] |=  PORT_PCR_MUX(1U);  			/* Port D0:  MUX = ALT1, GPIO (to blue LED on EVB) */
 }
 
 /**
@@ -155,6 +157,7 @@ void LPIT0_init(void)
 */
 int main(void)
 {
+	/* Main loop idle counter */
 	uint32_t u32Idle_counter = 0U;
 
 	/*----------------------------------------------------------- */

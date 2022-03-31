@@ -12,11 +12,13 @@ If running code on the S32K144EVB, pressing BTN0 lights up the blue LED.
 ## Design
 1. Disable watchdog
 2. Enable clocks to GPIO modules and configure GPIO ports:
-   * GPIO input (goes to BTN0 on evaluation board)
-   * GPIO output (goes to blue LED)
+   * PTC12: GPIO input (goes to BTN 0 on evaluation board)
+   * PTD0: GPIO output (goes to blue LED)
 3. Loop:
-   * If BTN0 is pressed (input = 1), Turn LED on (output = 0)
-   * else (input = 0), Turn LED off (output = 1)
+   * If BTN0 is pressed (input = 1)
+     * Turn LED on (output = 0)
+   * else (input = 0)
+     * Turn LED off (output = 1)
 
 ## Pins definitions
 

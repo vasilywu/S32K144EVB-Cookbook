@@ -18,8 +18,9 @@ To initialize an interrupt three writes to the NVIC are taken in this project:
 
 ## Design
 1. Disable watchdog
-2. Enable clocks to GPIO modules and configure GPIO ports:
-   * GPIO output (goes to blue LED)
+2. Initialize port pins:
+   * Enable clock to Port D module
+   * PTD0: GPIO output (goes to blue LED)
 3. Initialize system oscillator (SOSC) for 8 MHz crystal
    * Initialize desired SOSC dividers
    * Configure range, high gain, reference
@@ -30,7 +31,7 @@ To initialize an interrupt three writes to the NVIC are taken in this project:
    * Ensure SPLL is disable to allow configuration
    * Initialized desired SPLL dividers
    * Initialize PLL Ref Clk Divider and Sys PLL Multiplier 1
-   * Fpll = Fosc / PLL Ref Clk Divider x Sys PLL Multiplier / 2 = 8 MHz / 1 x 20 / 2= 160 MHz
+     * Fpll = Fosc / PLL Ref Clk Divider x Sys PLL Multiplier / 2 = 8 MHz / 1 x 20 / 2= 160 MHz
    * Ensure SPLL Control and Status register is unlocked
    * Enable SPLL in SPLL Control and Status register
    * Wait for SPLL to be valid
@@ -47,7 +48,7 @@ To initialize an interrupt three writes to the NVIC are taken in this project:
    * Switch system clock input to SPLL (160 MHz before dividers)
 7. Loop: wait forever
 8. LPIT_0 Channel 0 Interrupt Handler:
-   * Clear channel flag2
+   * Clear channel flag
    * Increment counter
    * Toggle GPIO output
 
