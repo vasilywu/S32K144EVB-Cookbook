@@ -19,10 +19,10 @@
 *                                       LOCAL MACROS
 ==================================================================================================*/
 /* Port PTD0, bit 0: EVB output to blue LED */
-#define PTD0	0U
+#define PTD0		(0U)
 
 /* Port PTC12, bit 12: EVB input from BTN0 [SW2] */
-#define PTC12	12U
+#define PTC12		(12U)
 
 /*==================================================================================================
 *                                      LOCAL CONSTANTS
@@ -75,7 +75,8 @@ void WDOG_disable(void)
 */
 int main(void)
 {
-	uint32_t u32Counter = 0;
+	/* Main loop idle counter */
+	uint32_t u32Idle_counter = 0U;
 
 	/*----------------------------------------------------------- */
 	/*    Initialization                                          */
@@ -88,11 +89,11 @@ int main(void)
 
 	/* Configure port C12 as GPIO input (BTN 0 [SW2] on EVB) */
 	PTC->PDDR &= ~(1U << PTC12);   							/* Port C12: Data Direction= input (default) */
-	PORTC->PCR[12] = PORT_PCR_MUX(1U) | PORT_PCR_PFE_MASK; 	/* Port C12: MUX = GPIO, input filter enabled */
+	PORTC->PCR[PTC12] = PORT_PCR_MUX(1U) | PORT_PCR_PFE_MASK; 	/* Port C12: MUX = GPIO, input filter enabled */
 
 	/* Configure port D0 as GPIO output (LED on EVB) */
 	PTD->PDDR |= 1U << PTD0;       							/* Port D0: Data Direction= output */
-	PORTD->PCR[0] = PORT_PCR_MUX(1U); 						/* Port D0: MUX = GPIO */
+	PORTD->PCR[PTD0] = PORT_PCR_MUX(1U); 						/* Port D0: MUX = GPIO */
 
 	/*----------------------------------------------------------- */
 	/*    Infinite For                                            */
@@ -108,7 +109,7 @@ int main(void)
 			PTD-> PSOR |= 1U << PTD0;	/* Set Output on port D0 (LED off) */
 		}
 		
-		u32Counter++;
+		u32Idle_counter++;					/* Increment idle counter */
 	}
 }
 
