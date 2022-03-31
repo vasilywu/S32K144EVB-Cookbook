@@ -18,6 +18,8 @@
 /*==================================================================================================
 *                                       LOCAL MACROS
 ==================================================================================================*/
+/* Port PTD0, bit 0: EVB output to blue LED */
+#define PTD0		(0U)
 
 /*==================================================================================================
 *                                      LOCAL CONSTANTS
@@ -87,8 +89,8 @@ void WDOG_disable(void)
 void PORT_init(void)
 {
 	PCC->PCCn[PCC_PORTD_INDEX] = PCC_PCCn_CGC_MASK; 	/* Enable clock for PORT D */
-	PTD->PDDR |= 1U << 0U;            				/* Port D0:  Data Direction= output */
-	PORTD->PCR[0] |=  PORT_PCR_MUX(1U);  			/* Port D0:  MUX = ALT1, GPIO (to blue LED on EVB) */
+	PTD->PDDR |= 1U << 0U;            					/* Port D0:  Data Direction= output */
+	PORTD->PCR[PTD0] |=  PORT_PCR_MUX(1U);  			/* Port D0:  MUX = ALT1, GPIO (to blue LED on EVB) */
 }
 
 /**
@@ -130,6 +132,7 @@ void LPIT0_init(void)
 */
 int main(void)
 {
+	/* LPIT0 timeout counter */
 	uint32_t u32Lpit0_ch0_flag_counter = 0;
 
 	/*----------------------------------------------------------- */
@@ -156,11 +159,8 @@ int main(void)
 		while (0U == (LPIT0->MSR & LPIT_MSR_TIF0_MASK))	/* Wait for LPIT0 CH0 Flag */
 		{
 		}
-		
 		u32Lpit0_ch0_flag_counter++;					/* Increment LPIT0 timeout counter */
-		
 		PTD->PTOR |= 1U << 0U;                			/* Toggle output on port D0 (blue LED) */
-		
 		LPIT0->MSR |= LPIT_MSR_TIF0_MASK; 				/* Clear LPIT0 timer flag 0 */
 	}
 }
