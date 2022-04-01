@@ -18,12 +18,12 @@
 /*==================================================================================================
 *                                       LOCAL MACROS
 ==================================================================================================*/
-/* Port PTD15, bit 15: EVB output to red LED */
-#define PTD15		(15U)
+/* Port PTE4, bit 4: EVB CAN0_RX */
+#define PTE4		(4U)
+/* Port PTE5, bit 5: EVB CAN0_TX */
+#define PTE5		(5U)
 /* Port PTD16, bit 16: EVB output to green LED */
 #define PTD16		(16U)
-/* Port PTD0, bit 0: EVB output to blue LED */
-#define PTD0		(0U)
 
 /*==================================================================================================
 *                                      LOCAL CONSTANTS
@@ -40,11 +40,6 @@
 /*==================================================================================================
 *                                      GLOBAL VARIABLES
 ==================================================================================================*/
-/* ADC0 Channel 12 Result in miliVolts */
-uint32_t u32AdcResultInMv_pot = 0U;
-
-/* ADC0 Channel 29 Result in miliVolts */
-uint32_t u32AdcResultInMv_Vrefsh = 0U;
 
 /*==================================================================================================
 *                                   LOCAL FUNCTION PROTOTYPES
@@ -89,13 +84,13 @@ void WDOG_disable(void)
 */
 void PORT_init(void)
 {
-	PCC->PCCn[PCC_PORTD_INDEX ]|=PCC_PCCn_CGC_MASK; 		/* Enable clock for PORTD */
-	PORTD->PCR[PTD0] = PORT_PCR_MUX(1U); 					/* Port D0: MUX = GPIO */
-	PORTD->PCR[PTD15] = PORT_PCR_MUX(1U); 					/* Port D15: MUX = GPIO */
-	PORTD->PCR[PTD16] = PORT_PCR_MUX(1U);					/* Port D16: MUX = GPIO */
-	PTD->PDDR |= (1U << PTD0 | 1U << PTD15 | 1U << PTD16);	/* Port D0: Data Direction= output */
-															/* Port D15: Data Direction= output */
-															/* Port D16: Data Direction= output */
+	PCC->PCCn[PCC_PORTE_INDEX] |= PCC_PCCn_CGC_MASK; /* Enable clock for PORTE */
+	PORTE->PCR[PTE4] |= PORT_PCR_MUX(5U); 	/* Port E4: MUX = ALT5, CAN0_RX */
+	PORTE->PCR[PTE5] |= PORT_PCR_MUX(5U); 	/* Port E5: MUX = ALT5, CAN0_TX */
+	
+	PCC->PCCn[PCC_PORTD_INDEX ]|=PCC_PCCn_CGC_MASK; /* Enable clock for PORTD */
+	PORTD->PCR[PTD16] = PORT_PCR_MUX(1U); 	/* Port D16: MUX = GPIO (to green LED) */
+	PTD->PDDR |= 1U << 16U; 				/* Port D16: Data direction = output */
 }
 
 /*==================================================================================================
@@ -106,8 +101,8 @@ void PORT_init(void)
 */
 int main(void)
 {
-	/* Main loop idle counter */
-	uint32_t u32Idle_counter = 0U;
+	/* receive msg counter */
+	uint32_t rx_msg_count = 0U;
 
 	/*----------------------------------------------------------- */
 	/*    Initialization                                          */
@@ -122,48 +117,26 @@ int main(void)
 	
 	NormalRUNmode_80MHz();  /* Init clocks: 80 MHz sysclk & core, 40 MHz bus, 20 MHz flash */
 	
-	PORT_init(); 			/* Init port clocks and gpio outputs */
+	FLEXCAN0_init(); 		/* Init FlexCAN0 */
 	
-	ADC_init(); 			/* Init ADC resolution 12 bit*/
-
+	FLEXCAN0_transmit_msg(); /* Transmit initial message from EVB to CAN tool */
+	
 	/*----------------------------------------------------------- */
 	/*    Infinite For                                            */
 	/*----------------------------------------------------------- */ 
 	for(;;)
 	{
-		u32Idle_counter++;						/* Increment idle counter */
-		
-		convertAdcChan(12U); 					/* Convert Channel AD12 to pot on EVB */
-		while(adc_complete() == 0U)				/* Wait for conversion complete flag */
+		if (1U == ((CAN0->IFLAG1 >> 4U) & 1U))	/* If CAN 0 MB 4 flag is set (received msg), read MB4 */
 		{
+			FLEXCAN0_receive_msg(); 	/* Read message */
+			rx_msg_count++; 			/* Increment receive msg counter */
+			if (rx_msg_count >= 1000U) 	/* If 1000 messages have been received, */
+			{ 
+				PTD->PTOR |= 1U << 16U; /* toggle output port D16 (Green LED) */
+				rx_msg_count = 0U; /* and reset message counter */
+			}
+			FLEXCAN0_transmit_msg(); /* Transmit message using MB0 */	
 		}
-		u32AdcResultInMv_pot = read_adc_chx(); 	/* Get channel's conversion results in mv */
-		
-		if (u32AdcResultInMv_pot > 3750U) 		/* If result > 3.75V */
-		{ 
-			PTD->PSOR |= (1U << PTD0 | 1U << PTD16); 	/* turn off blue, green LEDs */
-			PTD->PCOR |= 1U << PTD15; 					/* turn on red LED */
-		}
-		else if (u32AdcResultInMv_pot > 2500U) 	/* If result > 3.75V */
-		{ 
-			PTD->PSOR |= (1U << PTD0 | 1U << PTD15); 	/* turn off blue, red LEDs */
-			PTD->PCOR |= 1U << PTD16; 					/* turn on green LED */
-		}
-		else if (u32AdcResultInMv_pot >1250U)	/* If result > 3.75V */ 
-		{
-			PTD->PSOR |= (1U << PTD15 | 1U << PTD16); 	/* turn off red, green LEDs */
-			PTD->PCOR |= 1U << PTD0; 					/* turn on blue LED */
-		}
-		else 
-		{
-			PTD->PSOR |= (1U << PTD0 | 1U << PTD15 | 1U << PTD16); /* Turn off all LEDs */
-		}
-		
-		convertAdcChan(29U); 					/* Convert chan 29, Vrefsh */
-		while(adc_complete() == 0U) 				/* Wait for conversion complete flag */
-		{
-		}
-		u32AdcResultInMv_Vrefsh = read_adc_chx(); /* Get channel's conversion results in mv */		
 	}
 }
 
