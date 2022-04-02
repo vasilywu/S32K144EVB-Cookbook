@@ -1,6 +1,6 @@
 /**
-* @file				flexcan.c
-* @brief            FlexCAN Driver
+* @file			flexcan_fd.c
+* @brief		FlexCAN FD Driver
 */
  
 /*==================================================================================================
@@ -200,4 +200,4 @@ void FLEXCAN0_receive_msg(void)
 }
 
 
-/* END flexcan */
+/* END flexcan_fd */
