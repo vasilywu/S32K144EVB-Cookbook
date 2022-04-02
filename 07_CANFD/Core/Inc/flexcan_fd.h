@@ -1,10 +1,10 @@
 /**
-* @file				flexcan.h
-* @brief            Header for adc.c file
+* @file				flexcan_fd.h
+* @brief			Header for flexcan_fd.c file
 */
 
-#ifndef FLEXCAN_H
-#define FLEXCAN_H
+#ifndef FLEXCAN_FD_H
+#define FLEXCAN_FD_H
 
 /*==================================================================================================
 *                                        INCLUDE FILES
@@ -88,4 +88,4 @@ void FLEXCAN0_transmit_msg(void);
 void FLEXCAN0_receive_msg(void);
 
 
-#endif	/* FLEXCAN_H */
+#endif	/* FLEXCAN_FD_H */
