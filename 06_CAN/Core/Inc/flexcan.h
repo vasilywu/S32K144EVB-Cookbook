@@ -1,6 +1,6 @@
 /**
 * @file				flexcan.h
-* @brief            Header for adc.c file
+* @brief            Header for flexcan.c file
 */
 
 #ifndef FLEXCAN_H
